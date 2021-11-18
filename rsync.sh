@@ -1,5 +1,11 @@
 #! /bin/bash
 
+if [ -z $1 ]; then ## tips
+  echo -e "\033[34m 
+  bash rsync.sh <localpath/localfile> <remoteip> <remote_path>
+  \033[0m"
+fi
+
 localpath=$1
 remoteip=$2
 remotepath=$3
