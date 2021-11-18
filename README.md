@@ -12,11 +12,14 @@
 - 支持钉钉告警
 
 # usage
+```
 bash rsync.sh <localpath/localfile> <remoteip> <remote_path>
+
 ## 文件夹传输
 bash rsync.sh /nfs/hd01/sealed 172.10.11.206 /nfs/hd01/sealed
 ## 文件传输
 bash rsync.sh /nfs/hd01/sealed/s-t01000-11 172.10.11.206 /nfs/hd01/sealed
+```
 
 # batch
 vi batch1.sh
