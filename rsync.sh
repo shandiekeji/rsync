@@ -2,7 +2,7 @@
 
 if [ -z $1 ]; then ## tips
   echo -e "\033[34m 
-  bash rsync.sh <localpath/localfile> <remoteip> <remote_path>
+  bash rsync.sh <localpath/localfile> <remoteip> <remote_path> [speed(MB/s)]
   \033[0m"
   exit
 fi
@@ -10,6 +10,16 @@ fi
 localpath=$1
 remoteip=$2
 remotepath=$3
+speed=$4
+if [ -z $speed ]; then
+  speed=180
+elif echo $speed | grep -q '[^0-9]'; then
+  speed=180
+elif [ $speed -le 0 ]; then
+  speed=180
+fi
+limitspeed=`expr $speed \* 1024 \* 8`
+
 host=`hostname -I | awk '{print $1}'`
 localip=$host
 echo localip=$localip  localpath=$localpath  remoteip=$remoteip  remotepath=$remotepath
@@ -83,9 +93,9 @@ do
     echo "oldbyte：$oldbyte"
     echo ""
     if [ $oldbyte -gt 0 ]; then
-      # rsync --bwlimit kb/s  10240000=10Gb/s  1480000=180MB/s
-      echo -e "\033[40;32m rsync -avP -e 'ssh -p 22' --bwlimit=1480000 $oldpath root@${remoteip}:$remotepath/ >> /var/log/rsync/rsync-$filename.log \033[0m"
-      rsync -avP -e 'ssh -p 22' --bwlimit=1480000 $oldpath root@${remoteip}:$remotepath/ >> /var/log/rsync/rsync-$filename.log
+      # rsync --bwlimit kb/s  10240000=10Gb/s  1480000=180MB/s 
+      echo -e "\033[40;32m rsync -avP -e 'ssh -p 22' --bwlimit=$limitspeed $oldpath root@${remoteip}:$remotepath/ >> /var/log/rsync/rsync-$filename.log \033[0m"
+      rsync -avP -e 'ssh -p 22' --bwlimit=$limitspeed $oldpath root@${remoteip}:$remotepath/ >> /var/log/rsync/rsync-$filename.log
       wait
       sleep 6
       newpath="$remotepath/$filename"
