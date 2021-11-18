@@ -4,6 +4,7 @@ if [ -z $1 ]; then ## tips
   echo -e "\033[34m 
   bash rsync.sh <localpath/localfile> <remoteip> <remote_path>
   \033[0m"
+  exit
 fi
 
 localpath=$1
